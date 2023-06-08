@@ -1,4 +1,6 @@
-#include <istream>
+#include <iostream>
+#include <fstream>
+#include <conio.h>
 
 #include "Functions.h"
 
