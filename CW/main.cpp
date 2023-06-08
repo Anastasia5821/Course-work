@@ -1,7 +1,7 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <list>
-#include <chrono>
+#include <conio.h>
 #include "RBST.h"
 
 void qsort(Client* arr, const int size)
@@ -34,14 +34,75 @@ void templ()
         << "Deposit duration [enter]\n\n";
 }
 
+void manual(RBS_Tree *tree, std::list<Client> &clients)
+{
+    templ();
+    std::cout << "Type '\\' to finish (at the end)\n\n";
+    char ch = '0';
+
+    while (ch != '\\')
+    {
+        Client temp;
+        std::cin >> temp;
+        ch = _getch();
+        tree = RBST::insert(tree, temp);
+        clients.push_back(temp);
+    }
+}
+
+void find(RBS_Tree *tree, Client &to_find)
+{
+    templ();
+
+    std::cin >> to_find;
+    if (RBST::find(tree, to_find))
+        std::cout << "Entry is found\n";
+    else
+        std::cout << "Entry not found\n";
+}
+
+void remove(RBS_Tree *tree, Client &to_find)
+{
+    templ();
+
+    std::cin >> to_find;
+    if (RBST::find(tree, to_find))
+    {
+        RBST::remove(tree, to_find);
+        std::cout << "Entry is found and deleted\n";
+    }
+    else std::cout << "Entry not found\n";
+}
+
+void sort(std::list<Client> &clients)
+{
+    if (clients.size() == 0) return;
+
+    Client* temp = new Client[clients.size()];
+    size_t i = 0;
+
+    for (Client cl : clients)
+        temp[i++] = cl;
+
+    qsort(temp, (int)clients.size());
+
+    size_t size = clients.size();
+    clients.clear();
+
+    for (i = 0; i < size; ++i)
+        clients.push_back(temp[i]);
+
+    delete[] temp;
+}
+
 void menu()
 {
     int choice;
-    const int CL_COUNT = 5;
-    Client clients[CL_COUNT], to_find;
+    std::list<Client> clients;
+    Client to_find;
     std::ifstream fin;
-    RBS_Tree* tree = new RBS_Tree(clients);
-
+    RBS_Tree* tree = nullptr;
+    
     while (true)
     {
         do
@@ -75,36 +136,16 @@ void menu()
             fin.open("the best-case.txt");
             break;
         case 4:
-            templ();
-
-            for (int i = 0; i < CL_COUNT; ++i)
-            {
-                std::cin >> clients[i];
-                RBST::insert(tree, clients[i]);
-            }
+            manual(tree, clients);
             break;
         case 5:
-            templ();
-
-            std::cin >> to_find;
-            if (RBST::find(tree, to_find)) 
-                std::cout << "Entry is found\n";
-            else 
-                std::cout << "Entry not found\n";
+            find(tree, to_find);
             break;
         case 6:
-            templ();
-
-            std::cin >> to_find;
-            if (RBST::find(tree, to_find))
-            {
-                RBST::remove(tree, to_find);
-                std::cout << "Entry is found and deleted\n";
-            }
-            else std::cout << "Entry not found\n";
+            remove(tree, to_find);
             break;
         case 7:
-            qsort(clients, CL_COUNT);
+            sort(clients);
             break;
         case 8:
             for (Client cl : clients)
@@ -114,10 +155,14 @@ void menu()
 
         if (fin.is_open())
         {
-            for (int i = 0; i < CL_COUNT; ++i) 
+            for (int i = 0; i < 5; ++i) 
             {
-                fin >> clients[i];
-                RBST::insert(tree, clients[i]);
+                Client temp;
+                fin >> temp;
+
+                tree = RBST::insert(tree, temp);
+
+                clients.push_back(temp);
             }
             fin.close();
         }

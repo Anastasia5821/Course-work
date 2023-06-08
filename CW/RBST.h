@@ -18,11 +18,11 @@ std::istream& operator>>(std::istream&, Client&);
 
 struct RBS_Tree
 {
-    Client *key;
+    Client key;
     int size;
     RBS_Tree* left;
     RBS_Tree* right;
-    RBS_Tree(Client *k) : key(k), left(0), right(0), size(1) {}
+    RBS_Tree(Client k) : key(k), left(0), right(0), size(1) {}
 };
 
 namespace RBST
