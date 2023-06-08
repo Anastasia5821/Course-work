@@ -54,10 +54,10 @@ namespace RBST
     {
         if (!p) return 0;
 
-        if (k == p->key)
+        if (k == *p->key)
             return p;
 
-        if (k < p->key)
+        if (k < *p->key)
             return find(p->left, k);
         else
             return find(p->right, k);
@@ -65,12 +65,12 @@ namespace RBST
 
     RBS_Tree* insert(RBS_Tree* p, Client& k)
     {
-        if (!p) return new RBS_Tree(k);
+        if (!p) return new RBS_Tree(&k);
 
         if (rand() % (p->size + 1) == 0)
             return insertroot(p, k);
 
-        if (p->key > k)
+        if (*p->key > k)
             p->left = insert(p->left, k);
         else
             p->right = insert(p->right, k);
@@ -107,9 +107,9 @@ namespace RBST
 
     RBS_Tree* insertroot(RBS_Tree* p, Client& k)
     {
-        if (!p) return new RBS_Tree(k);
+        if (!p) return new RBS_Tree(&k);
 
-        if (k < p->key)
+        if (k < *p->key)
         {
             p->left = insertroot(p->left, k);
             return rotateright(p);
@@ -144,13 +144,13 @@ namespace RBST
     {
         if (!p) return p;
 
-        if (p->key == k)
+        if (*p->key == k)
         {
             RBS_Tree* q = join(p->left, p->right);
             delete p;
             return q;
         }
-        else if (k < p->key)
+        else if (k < *p->key)
             p->left = remove(p->left, k);
         else
             p->right = remove(p->right, k);

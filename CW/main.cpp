@@ -40,7 +40,7 @@ void menu()
     const int CL_COUNT = 5;
     Client clients[CL_COUNT], to_find;
     std::ifstream fin;
-    RBS_Tree* tree = new RBS_Tree(*clients);
+    RBS_Tree* tree = new RBS_Tree(clients);
 
     while (true)
     {
